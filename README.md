@@ -6,7 +6,7 @@ Daemon allows users to create habits, track daily completions, manage logs, and 
 ## Live Demo
 
 🌐 Deployed Application:  
-[text](https://habit-tracker-api-lv5i.onrender.com)
+[Live Application](https://habit-tracker-api-lv5i.onrender.com)
 
 ---
 
@@ -304,7 +304,7 @@ python-multipart
 
 This project is deployed on Render.
 
-Production URL:[text](https://habit-tracker-api-lv5i.onrender.com)
+Production URL:[Visit Live App](https://habit-tracker-api-lv5i.onrender.com)
 
 ---
 
