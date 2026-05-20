@@ -1,13 +1,13 @@
 import os
 from datetime import date
 
-from database import Base, SessionLocal, engine
+from core.database import Base, SessionLocal, engine
 from dotenv import load_dotenv
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from models import Habit, Logs
+from core.models import Habit, Logs
 from pydantic import BaseModel
 from sqlalchemy import select
 
