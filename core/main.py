@@ -28,8 +28,8 @@ class HabitToUpdate(BaseModel):
 
 
 app = FastAPI()
-templates = Jinja2Templates(directory="templates")
-app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="core/templates")
+app.mount("/static", StaticFiles(directory="core/static"), name="static")
 
 
 @app.get("/")
