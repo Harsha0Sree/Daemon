@@ -2,18 +2,19 @@ import os
 from datetime import date
 
 from core.database import Base, SessionLocal, engine
+from core.models import Habit, Logs
 from dotenv import load_dotenv
-from fastapi import FastAPI, Form, Request
+from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from core.models import Habit, Logs
 from pydantic import BaseModel
 from sqlalchemy import select
 
 load_dotenv()
 
 PORT = os.environ.get("PORT", 8000)
+API_KEY = os.environ.get("ASSEMBLY_API_KEY")
 
 Base.metadata.create_all(engine)
 
@@ -139,3 +140,9 @@ def update_habit(name_to_update_to: HabitToUpdate):
         return {
             "message": f"the habit {name_to_update_to.name} has been changed to {name_to_update_to.name_to_update_to} "
         }
+
+
+@app.post("/voice_log")
+def voice_transcript(audio: UploadFile = File(...)):
+    return (audio.filename, (type(audio.file)))
+

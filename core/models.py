@@ -14,3 +14,11 @@ class Logs(Base):
     habit_id: Mapped[int] = mapped_column(ForeignKey("habits.id"))
     logs: Mapped[str]
     id: Mapped[int] = mapped_column(primary_key=True)
+
+
+class VoiceWorkout(Base):
+    __tablename__ = "voice_workout"
+    name_of_exercise: Mapped[str] = mapped_column(unique=True)
+    reps_performed: Mapped[int]
+    timestamp: Mapped[str]
+    id: Mapped[int] = mapped_column(primary_key=True)
