@@ -119,9 +119,7 @@ def create_habit_new(habit_name: str = Form(...)):
         session.commit()
     return RedirectResponse(url="/dashboard", status_code=303)
 
-@app.get("/habit/create")
-def test():
-    return "test"
+
 
 @app.put("/habits/{name}")
 def update_habit(name_to_update_to: HabitToUpdate):
