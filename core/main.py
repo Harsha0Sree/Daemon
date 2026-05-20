@@ -1,5 +1,8 @@
+import os
 from datetime import date
+
 from database import Base, SessionLocal, engine
+from dotenv import load_dotenv
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -7,6 +10,10 @@ from fastapi.templating import Jinja2Templates
 from models import Habit, Logs
 from pydantic import BaseModel
 from sqlalchemy import select
+
+load_dotenv()
+
+PORT = os.environ.get("PORT", 8000)
 
 Base.metadata.create_all(engine)
 
@@ -118,7 +125,6 @@ def create_habit_new(habit_name: str = Form(...)):
         session.add(new_habit)
         session.commit()
     return RedirectResponse(url="/dashboard", status_code=303)
-
 
 
 @app.put("/habits/{name}")
