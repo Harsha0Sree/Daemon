@@ -1,54 +1,73 @@
-# Daemon - Habit Tracker API
+# Daemon ⚡
 
-A modern habit tracking web application built with **FastAPI**, **SQLAlchemy**, and **Jinja2 Templates**.  
-Daemon allows users to create habits, track daily completions, manage logs, and visualize habits through a clean dashboard UI.
+<p align="center">
+  A modern habit tracking application built with <strong>FastAPI</strong>, <strong>SQLAlchemy</strong>, and <strong>Jinja2</strong>.
+</p>
 
-## Live Demo
-
-🌐 Deployed Application: 
- 
-[Live Application](https://habit-tracker-api-lv5i.onrender.com)
-
----
-
-# Features
-
-- Create habits
-- Update existing habits
-- Delete habits
-- Log daily habit completion
-- View all habits
-- View logs for individual habits
-- Dashboard UI with Jinja2 templates
-- SQLite database integration
-- SQLAlchemy ORM
-- RESTful API endpoints
-- Render deployment support
+<p align="center">
+  Track habits, log consistency, and manage progress through a clean dashboard interface.
+</p>
 
 ---
 
-# Tech Stack
+## 🚀 Live Demo
 
-## Backend
+🔗 [Visit Live Application](https://habit-tracker-api-lv5i.onrender.com)
+
+📘 API Documentation:
+- Swagger UI → `https://habit-tracker-api-lv5i.onrender.com/docs`
+- ReDoc → `https://habit-tracker-api-lv5i.onrender.com/redoc`
+
+---
+
+## 🛠 Tech Stack
+
+### Backend
 - Python
 - FastAPI
 - SQLAlchemy
 - Pydantic
 
-## Frontend
+### Frontend
 - HTML
 - CSS
 - Jinja2 Templates
 
-## Database
+### Database
 - SQLite
 
-## Deployment
+### Deployment
 - Render
 
 ---
 
-# Project Structure
+## ✨ Features
+
+- Create new habits
+- Update existing habits
+- Delete habits
+- Log daily habit completion
+- View all habits
+- View logs for individual habits
+- Dashboard UI with server-side rendering
+- RESTful API architecture
+- SQLAlchemy ORM integration
+- FastAPI automatic API docs
+- Production deployment on Render
+
+---
+
+## 📸 UI Preview
+
+> Add screenshots here after uploading images to your repository.
+
+```md
+![Dashboard Screenshot](./screenshots/dashboard.png)
+```
+
+---
+
+## 📂 Project Structure
 
 ```bash
 project/
@@ -64,16 +83,16 @@ project/
 │   └── models.py
 │
 ├── main.py
-├── .env
 ├── requirements.txt
+├── .env
 └── README.md
 ```
 
 ---
 
-# Installation
+# ⚙️ Installation
 
-## 1. Clone the Repository
+## 1. Clone Repository
 
 ```bash
 git clone https://github.com/your-username/daemon-habit-tracker.git
@@ -91,7 +110,7 @@ python -m venv venv
 venv\Scripts\activate
 ```
 
-### Mac/Linux
+### macOS/Linux
 
 ```bash
 python3 -m venv venv
@@ -110,7 +129,7 @@ pip install -r requirements.txt
 
 ## 4. Configure Environment Variables
 
-Create a `.env` file:
+Create a `.env` file in the root directory:
 
 ```env
 DATABASE_URL=sqlite:///orm_data.db
@@ -119,13 +138,13 @@ PORT=8000
 
 ---
 
-## 5. Run the Server
+## 5. Start Development Server
 
 ```bash
 uvicorn main:app --reload
 ```
 
-Server will run on:
+Server runs at:
 
 ```bash
 http://127.0.0.1:8000
@@ -133,11 +152,11 @@ http://127.0.0.1:8000
 
 ---
 
-# API Endpoints
+# 📡 API Endpoints
 
-## Home
+## Home Route
 
-### GET `/`
+### `GET /`
 
 Returns application status.
 
@@ -145,17 +164,17 @@ Returns application status.
 
 ## Dashboard
 
-### GET `/dashboard`
+### `GET /dashboard`
 
-Renders the habit tracking dashboard UI.
+Renders the dashboard UI.
 
 ---
 
-# Habit Endpoints
+# 🧠 Habit Endpoints
 
 ## Create Habit
 
-### POST `/habits`
+### `POST /habits`
 
 ### Request Body
 
@@ -169,13 +188,13 @@ Renders the habit tracking dashboard UI.
 
 ## Get All Habits
 
-### GET `/habits`
+### `GET /habits`
 
 ---
 
-## Get One Habit
+## Get Single Habit
 
-### GET `/habits/{name}`
+### `GET /habits/{name}`
 
 Example:
 
@@ -187,7 +206,7 @@ Example:
 
 ## Update Habit
 
-### PUT `/habits/{name}`
+### `PUT /habits/{name}`
 
 ### Request Body
 
@@ -202,15 +221,15 @@ Example:
 
 ## Delete Habit
 
-### DELETE `/habits/{name}`
+### `DELETE /habits/{name}`
 
 ---
 
-# Logs Endpoints
+# 📅 Logs Endpoints
 
 ## Log Habit Completion
 
-### POST `/logs/{habit_name_to_log}`
+### `POST /logs/{habit_name_to_log}`
 
 Example:
 
@@ -222,7 +241,7 @@ Example:
 
 ## Get Habit Logs
 
-### GET `/logs/{habit}`
+### `GET /logs/{habit}`
 
 Example:
 
@@ -232,7 +251,7 @@ Example:
 
 ---
 
-# Database Models
+# 🗄 Database Models
 
 ## Habit Model
 
@@ -259,35 +278,7 @@ class Logs(Base):
 
 ---
 
-# UI Preview
-
-The dashboard includes:
-
-- Habit statistics
-- Habit cards
-- Completion buttons
-- Habit creation form
-- Modern dark-themed interface
-
----
-
-# Future Improvements
-
-- User authentication
-- JWT authorization
-- Habit streak tracking
-- Weekly/monthly analytics
-- PostgreSQL support
-- Docker deployment
-- Responsive mobile UI
-- Habit categories
-- Notifications and reminders
-
----
-
-# Requirements
-
-Example `requirements.txt`
+# 📦 Example Requirements
 
 ```txt
 fastapi
@@ -301,20 +292,40 @@ python-multipart
 
 ---
 
-# Deployment
+# 🔮 Future Improvements
 
-This project is deployed on Render.
-
-Production URL : [Visit Live App](https://habit-tracker-api-lv5i.onrender.com)
+- JWT Authentication
+- User Accounts
+- Habit Streak Tracking
+- Weekly Analytics
+- PostgreSQL Migration
+- Docker Support
+- Mobile Responsive UI
+- Habit Categories
+- Notification System
+- Background Task Scheduling
 
 ---
 
-# Author
+# 🚀 Deployment
 
-Mikey
+This application is deployed on Render.
+
+🔗 Production URL:
+https://habit-tracker-api-lv5i.onrender.com
 
 ---
 
-# License
+# 👨‍💻 Author
 
-This project is open source and available under the MIT License.
+**Mikey**
+
+Aspiring AI entrepreneur and developer.
+
+---
+
+# 📄 License
+
+This project is licensed under the MIT License.
+
+---
