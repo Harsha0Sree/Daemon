@@ -57,16 +57,6 @@
 
 ---
 
-## 📸 UI Preview
-
-> Add screenshots here after uploading images to your repository.
-
-```md
-![Dashboard Screenshot](./screenshots/dashboard.png)
-```
-
----
-
 ## 📂 Project Structure
 
 ```bash
