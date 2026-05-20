@@ -10,6 +10,5 @@ wheels/
 .venv
 *.db
 *.vscode
-*.env
 .env
 .env.*

@@ -1,8 +1,9 @@
 import os
 from datetime import date
 
+from core.assemblyai import process_voice_data
 from core.database import Base, SessionLocal, engine
-from core.models import Habit, Logs
+from core.models import Habit, Logs, VoiceWorkout
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import RedirectResponse
@@ -14,7 +15,6 @@ from sqlalchemy import select
 load_dotenv()
 
 PORT = os.environ.get("PORT", 8000)
-API_KEY = os.environ.get("ASSEMBLY_API_KEY")
 
 Base.metadata.create_all(engine)
 
@@ -143,6 +143,14 @@ def update_habit(name_to_update_to: HabitToUpdate):
 
 
 @app.post("/voice_log")
-def voice_transcript(audio: UploadFile = File(...)):
-    return (audio.filename, (type(audio.file)))
+async def voice_transcript(audio: UploadFile = File(...)):
+    reps, exercise = process_voice_data(audio)
 
+    if reps is not None and exercise is not None:
+        with SessionLocal() as session:
+            result = VoiceWorkout(name_of_exercise=exercise, reps_performed=reps)
+            session.add(result)
+            session.commit()
+
+        return {"message": f"the {exercise} has been logged with {reps} reps"}
+    return {"message": "not able to parse the transcript"}
