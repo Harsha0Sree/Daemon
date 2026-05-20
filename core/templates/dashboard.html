@@ -19,9 +19,10 @@
                 <p class="subtitle">Habit Tracking Dashboard</p>
             </div>
 
-            <button class="add-btn">
-                + Add Habit
-            </button>
+            <form action="/habits/create" method="post">
+                <input type="text" name="habit_name" id="">
+                <button type="submit">submit</button>
+            </form>
         </header>
 
         <section class="stats-grid">
