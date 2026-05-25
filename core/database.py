@@ -11,7 +11,6 @@ class Base(DeclarativeBase):
 
 load_dotenv()
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///orm_data.db")
-
 engine = create_engine(DATABASE_URL, echo=True)
 
 

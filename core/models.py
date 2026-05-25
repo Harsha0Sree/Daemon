@@ -22,3 +22,9 @@ class VoiceWorkout(Base):
     reps_performed: Mapped[int]
     timestamp: Mapped[str]
     id: Mapped[int] = mapped_column(primary_key=True)
+
+
+class WebsitesToBlock(Base):
+    url: Mapped[str] = mapped_column(unique=True)
+    id : Mapped[int] = mapped_column(primary_key=True)
+
