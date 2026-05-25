@@ -1,5 +1,5 @@
 import pandas as pd
-from database import engine
+from core.database import engine
 
 
 def load_dataframe_workout(sql_query):
