@@ -1,4 +1,5 @@
 import os
+from contextlib import asynccontextmanager
 from datetime import date
 
 from core.assemblyai import process_voice_data
@@ -11,12 +12,11 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from sqlalchemy import select
+from sqlalchemy.exc import OperationalError
 
 load_dotenv()
 
 PORT = os.environ.get("PORT", 8000)
-
-Base.metadata.create_all(engine)
 
 
 class HabitCreate(BaseModel):
@@ -28,7 +28,19 @@ class HabitToUpdate(BaseModel):
     name_to_update_to: str
 
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    try:
+        Base.metadata.create_all(engine)
+    except OperationalError:
+        print("postgres container not runnning specified port")
+        raise RuntimeError("Database startup failed")
+    yield
+
+    print("app shutting down")
+
+
+app = FastAPI(lifespan=lifespan)
 templates = Jinja2Templates(directory="core/templates")
 app.mount("/static", StaticFiles(directory="core/static"), name="static")
 
@@ -148,7 +160,9 @@ async def voice_transcript(audio: UploadFile = File(...)):
 
     if reps is not None and exercise is not None:
         with SessionLocal() as session:
-            result = VoiceWorkout(name_of_exercise=exercise, reps_performed=reps)
+            result = VoiceWorkout(
+                name_of_exercise=exercise, reps_performed=reps, timestamp=date.today()
+            )
             session.add(result)
             session.commit()
 
