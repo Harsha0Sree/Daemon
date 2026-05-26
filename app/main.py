@@ -4,8 +4,14 @@ from datetime import date
 
 from app.assemblyai import process_voice_data
 from app.database import Base, SessionLocal, engine
-from app.gatekeeper import block_websites, sync_blocked_sites, unblock_websites,check_unlock_status
+from app.gatekeeper import (
+    block_websites,
+    check_unlock_status,
+    sync_blocked_sites,
+    unblock_websites,
+)
 from app.models import Habit, Logs, VoiceWorkout, WebsitesToBlock
+from app.scheduler import register_jobs, scheduler
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import RedirectResponse
@@ -40,14 +46,19 @@ async def lifespan(app: FastAPI):
     except OperationalError:
         print("postgres container not runnning specified port")
         raise RuntimeError("Database startup failed")
+    register_jobs()
+    scheduler.start()
+
     yield
+
+    scheduler.shutdown()
 
     print("app shutting down")
 
 
 app = FastAPI(lifespan=lifespan)
-templates = Jinja2Templates(directory="core/templates")
-app.mount("/static", StaticFiles(directory="core/static"), name="static")
+templates = Jinja2Templates(directory="app/templates")
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 
 @app.get("/")
@@ -202,6 +213,6 @@ def sync_block_list():
 def unlock_previlage():
     if check_unlock_status():
         unblock_websites()
-        return {"message":"unlocked"}
-        
-    return {"message":"finish habits"}
+        return {"message": "unlocked"}
+
+    return {"message": "finish habits"}

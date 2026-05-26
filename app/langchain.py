@@ -1,11 +1,11 @@
 import os
 
-from database import SessionLocal
+from app.database import SessionLocal
 from dotenv import load_dotenv
 from langchain.agents import create_agent
 from langchain.tools import tool
 from langchain_openai import ChatOpenAI
-from models import Habit, VoiceWorkout
+from app.models import Habit, VoiceWorkout
 from sqlalchemy import desc, select
 
 load_dotenv()

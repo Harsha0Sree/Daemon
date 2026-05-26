@@ -41,6 +41,7 @@ def sync_blocked_sites():
 
         with open("/etc/hosts", "w") as x:
             x.write(content)
+    print("syncing blocked sites")
 
 
 def check_unlock_status() -> bool:
