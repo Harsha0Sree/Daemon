@@ -1,321 +1,267 @@
-# Daemon ⚡
+# DAEMON
 
-<p align="center">
-  A modern habit tracking application built with <strong>FastAPI</strong>, <strong>SQLAlchemy</strong>, and <strong>Jinja2</strong>.
-</p>
+Behavioral operating system that enforces habit completion before internet access is restored.
 
-<p align="center">
-  Track habits, log consistency, and manage progress through a clean dashboard interface.
-</p>
+DAEMON combines AI agents, voice transcription, analytics, scheduling, and OS-level website blocking into a self-regulation backend platform.
 
 ---
 
-## 🚀 Live Demo
+## Problem Statement
 
-🔗 [Visit Live Application](https://habit-tracker-api-lv5i.onrender.com)
+Most productivity systems rely on reminders and self-discipline.
 
-📘 API Documentation:
-- Swagger UI → `https://habit-tracker-api-lv5i.onrender.com/docs`
-- ReDoc → `https://habit-tracker-api-lv5i.onrender.com/redoc`
+DAEMON approaches the problem differently:
 
----
+* distracting websites remain blocked
+* habits must be completed first
+* workouts and actions can be logged through voice
+* analytics provide behavioral feedback loops
+* automation maintains enforcement in the background
 
-## 🛠 Tech Stack
-
-### Backend
-- Python
-- FastAPI
-- SQLAlchemy
-- Pydantic
-
-### Frontend
-- HTML
-- CSS
-- Jinja2 Templates
-
-### Database
-- SQLite
-
-### Deployment
-- Render
+The project is designed as a backend-heavy behavioral infrastructure system rather than a simple CRUD tracker.
 
 ---
 
-## ✨ Features
+## Features
 
-- Create new habits
-- Update existing habits
-- Delete habits
-- Log daily habit completion
-- View all habits
-- View logs for individual habits
-- Dashboard UI with server-side rendering
-- RESTful API architecture
-- SQLAlchemy ORM integration
-- FastAPI automatic API docs
-- Production deployment on Render
+* Voice-based workout logging using AssemblyAI transcription
+* AI oracle agent using LangChain tools + OpenRouter LLMs
+* OS-level website blocking through hosts file manipulation
+* Habit-gated internet unlock system
+* Workout analytics using Pandas
+* Background automation using APScheduler
+* Dockerized PostgreSQL deployment
+* FastAPI REST API architecture
+* SQLAlchemy ORM integration
+* Jinja-powered dashboard rendering
 
 ---
 
-## 📂 Project Structure
+## Architecture
 
-```bash
-project/
+```mermaid
+graph TD
+
+A[Frontend Dashboard] --> B[FastAPI Backend]
+
+B --> C[(PostgreSQL)]
+B --> D[AssemblyAI API]
+B --> E[LangChain Agent]
+B --> F[Gatekeeper]
+B --> G[Scheduler]
+B --> H[Pandas Analytics]
+
+F --> I[/etc/hosts]
+```
+
+---
+
+## Tech Stack
+
+| Layer            | Technology  |
+| ---------------- | ----------- |
+| Backend          | FastAPI     |
+| ORM              | SQLAlchemy  |
+| Database         | PostgreSQL  |
+| AI Framework     | LangChain   |
+| Transcription    | AssemblyAI  |
+| Scheduling       | APScheduler |
+| Analytics        | Pandas      |
+| Templating       | Jinja2      |
+| Containerization | Docker      |
+
+---
+
+## Project Structure
+
+```text
+daemon/
+├── app/
+│   ├── main.py              # FastAPI entrypoint
+│   ├── models.py            # ORM + Pydantic schemas
+│   ├── database.py          # SQLAlchemy engine/session
+│   ├── assemblyai.py        # Voice transcription pipeline
+│   ├── analytics.py         # Workout analytics using Pandas
+│   ├── gatekeeper.py        # OS-level website blocking
+│   ├── scheduler.py         # APScheduler jobs
+│   ├── dependencies.py      # Dependency injection
+│   └── templates/           # Jinja dashboard views
 │
-├── core/
-│   ├── templates/
-│   │   └── dashboard.html
-│   │
-│   ├── static/
-│   │   └── dashboard.css
-│   │
-│   ├── database.py
-│   └── models.py
-│
-├── main.py
+├── screenshots/
+├── tests/
+├── Dockerfile
+├── docker-compose.yml
 ├── requirements.txt
-├── .env
+├── .env.example
 └── README.md
 ```
 
 ---
 
-# ⚙️ Installation
+## Installation
 
-## 1. Clone Repository
-
-```bash
-git clone https://github.com/your-username/daemon-habit-tracker.git
-cd daemon-habit-tracker
-```
-
----
-
-## 2. Create Virtual Environment
-
-### Windows
+### Clone Repository
 
 ```bash
-python -m venv venv
-venv\Scripts\activate
+git clone <repo_url>
+cd daemon
 ```
 
-### macOS/Linux
+### Create Environment Variables
 
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
-
----
-
-## 3. Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-## 4. Configure Environment Variables
-
-Create a `.env` file in the root directory:
+Create a `.env` file:
 
 ```env
-DATABASE_URL=sqlite:///orm_data.db
-PORT=8000
+DATABASE_URL=postgresql://postgres:password@postgres:5432/app_db
+ASSEMBLY_API_KEY=your_key
+OPEN_ROUTER_API_KEY=your_key
 ```
 
----
-
-## 5. Start Development Server
+### Run With Docker
 
 ```bash
-uvicorn main:app --reload
+docker-compose up --build
 ```
 
-Server runs at:
+### Access Services
 
-```bash
-http://127.0.0.1:8000
+```text
+FastAPI API: http://localhost:8000
+Swagger Docs: http://localhost:8000/docs
+PostgreSQL: localhost:5432
 ```
 
 ---
 
-# 📡 API Endpoints
+## API Examples
 
-## Home Route
+### Create Habit
 
-### `GET /`
+```http
+POST /habits
+```
 
-Returns application status.
-
----
-
-## Dashboard
-
-### `GET /dashboard`
-
-Renders the dashboard UI.
-
----
-
-# 🧠 Habit Endpoints
-
-## Create Habit
-
-### `POST /habits`
-
-### Request Body
+Request:
 
 ```json
 {
-  "name": "Workout"
+  "name": "meditate"
+}
+```
+
+Response:
+
+```json
+{
+  "message": "a new habit meditate is created"
 }
 ```
 
 ---
 
-## Get All Habits
+### Voice Workout Logging
 
-### `GET /habits`
+```http
+POST /voice_log
+```
 
----
+Form Data:
 
-## Get Single Habit
+```text
+audio=<audio_file>
+```
 
-### `GET /habits/{name}`
+Pipeline:
 
-Example:
-
-```bash
-/habits/Workout
+```text
+Audio Upload
+→ AssemblyAI Transcription
+→ Regex Parsing
+→ Database Insert
+→ Analytics Update
 ```
 
 ---
 
-## Update Habit
+## Screenshots
 
-### `PUT /habits/{name}`
+Add screenshots inside the `/screenshots` directory.
 
-### Request Body
+Recommended captures:
 
-```json
-{
-  "name": "Workout",
-  "name_to_update_to": "Gym"
-}
+* dashboard UI
+* Swagger API docs
+* Docker containers running
+* blocked website behavior
+* analytics output
+
+---
+
+## Current Limitations
+
+### Regex-Based Parsing
+
+The workout extraction pipeline currently relies on regex parsing and may fail on ambiguous natural language.
+
+Example edge cases:
+
+```text
+"I did 50 pushups and 20 pullups"
+"completed fifty pushups"
 ```
 
----
+### Hosts File Safety
 
-## Delete Habit
+Website blocking currently writes directly to `/etc/hosts`.
 
-### `DELETE /habits/{name}`
+Future production hardening should include:
 
----
+* atomic writes
+* managed sections
+* automatic backups
 
-# 📅 Logs Endpoints
+### Import-Time Agent Execution
 
-## Log Habit Completion
-
-### `POST /logs/{habit_name_to_log}`
-
-Example:
-
-```bash
-/logs/Workout
-```
+LangChain agent invocation should be isolated from module imports to avoid startup-side effects and deployment instability.
 
 ---
 
-## Get Habit Logs
+## Future Improvements
 
-### `GET /logs/{habit}`
-
-Example:
-
-```bash
-/logs/Workout
-```
-
----
-
-# 🗄 Database Models
-
-## Habit Model
-
-```python
-class Habit(Base):
-    __tablename__ = "habits"
-
-    habit_name: Mapped[str] = mapped_column(unique=True)
-    id: Mapped[int] = mapped_column(primary_key=True)
-```
+* Replace regex parsing with structured LLM extraction
+* Add Redis task queue
+* Add authentication + multi-user support
+* Add websocket dashboard updates
+* Add ML-based behavioral predictions
+* Add cloud deployment pipeline
+* Add observability and metrics
 
 ---
 
-## Logs Model
+## Lessons Learned
 
-```python
-class Logs(Base):
-    __tablename__ = "logs"
-
-    habit_id: Mapped[int] = mapped_column(ForeignKey("habits.id"))
-    logs: Mapped[str]
-    id: Mapped[int] = mapped_column(primary_key=True)
-```
-
----
-
-# 📦 Example Requirements
-
-```txt
-fastapi
-uvicorn
-sqlalchemy
-jinja2
-python-dotenv
-pydantic
-python-multipart
-```
+* Lifecycle management in FastAPI
+* ORM relationship handling in SQLAlchemy
+* Dockerized backend orchestration
+* API polling workflows using AssemblyAI
+* Scheduler design for long-running services
+* Risks of side effects during application startup
+* System-level architecture design across multiple subsystems
 
 ---
 
-# 🔮 Future Improvements
+## Repository Goals
 
-- JWT Authentication
-- User Accounts
-- Habit Streak Tracking
-- Weekly Analytics
-- PostgreSQL Migration
-- Docker Support
-- Mobile Responsive UI
-- Habit Categories
-- Notification System
-- Background Task Scheduling
+DAEMON is designed to demonstrate:
+
+* backend systems engineering
+* infrastructure-aware application design
+* AI-assisted automation
+* behavioral systems architecture
+* production-oriented API structure
 
 ---
 
-# 🚀 Deployment
+## License
 
-This application is deployed on Render.
-
-🔗 Production URL:
-https://habit-tracker-api-lv5i.onrender.com
-
----
-
-# 👨‍💻 Author
-
-**Mikey**
-
-Aspiring AI entrepreneur and developer.
-
----
-
-# 📄 License
-
-This project is licensed under the MIT License.
-
----
+MIT License
