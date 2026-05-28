@@ -4,9 +4,10 @@
 
 DAEMON is a backend-heavy behavioral infrastructure system that combines AI agents, voice transcription, analytics, scheduling, and OS-level website blocking into a self-regulation platform.
 
-Traditional productivity systems depend on motivation.
+## Live Deployment
 
-DAEMON removes the decision entirely.
+* 🚀 Live API: https://habit-tracker-api-lv5i.onrender.com
+* 📘 Swagger Docs: https://habit-tracker-api-lv5i.onrender.com/docs
 
 ---
 
@@ -117,6 +118,7 @@ F --> G[Website Access Restored]
 | Templates              | Jinja2        |
 | Containerization       | Docker        |
 | Environment Management | python-dotenv |
+| Deployment             | Render        |
 
 ---
 
@@ -188,8 +190,6 @@ This creates actual behavioral enforcement instead of passive tracking.
 ---
 
 ## 4. Habit Completion
-
-After completing the habit:
 
 ```text
 Habit Completed
@@ -322,6 +322,22 @@ docker ps
 ```bash
 docker logs <container_id>
 ```
+
+---
+
+# Deployment
+
+## Render Deployment
+
+DAEMON is deployed on Render.
+
+### Production URL
+
+https://habit-tracker-api-lv5i.onrender.com
+
+### Interactive API Docs
+
+https://habit-tracker-api-lv5i.onrender.com/docs
 
 ---
 
