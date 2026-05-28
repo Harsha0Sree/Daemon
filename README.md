@@ -1,39 +1,69 @@
 # DAEMON
 
-Behavioral operating system that enforces habit completion before internet access is restored.
+> Behavioral operating system that enforces habit completion before internet access is restored.
 
-DAEMON combines AI agents, voice transcription, analytics, scheduling, and OS-level website blocking into a self-regulation backend platform.
+DAEMON is a backend-heavy behavioral infrastructure system that combines AI agents, voice transcription, analytics, scheduling, and OS-level website blocking into a self-regulation platform.
 
----
+Traditional productivity systems depend on motivation.
 
-# Problem Statement
-
-Most productivity systems rely on reminders and self-discipline.
-
-DAEMON approaches the problem differently:
-
-* distracting websites remain blocked
-* habits must be completed first
-* workouts and actions can be logged through voice
-* analytics provide behavioral feedback loops
-* automation maintains enforcement in the background
-
-The project is designed as a backend-heavy behavioral infrastructure system rather than a simple CRUD tracker.
+DAEMON removes the decision entirely.
 
 ---
 
-# Features
+# Why I Built This
 
-* Voice-based workout logging using AssemblyAI transcription
-* AI oracle agent using LangChain tools + OpenRouter LLMs
-* OS-level website blocking through hosts file manipulation
+Most habit trackers fail because they rely on willpower.
+
+I wanted a system that enforced behavioral constraints beneath the browser layer itself.
+
+Instead of tracking habits passively, DAEMON actively modifies system behavior by blocking distracting websites until required habits are completed.
+
+The project evolved into a full-stack behavioral enforcement engine integrating:
+
+* AI-powered voice logging
+* relational state management
+* automation workflows
+* analytics pipelines
+* OS-level controls
+* containerized deployment
+
+---
+
+# Core Features
+
+## Behavioral Enforcement
+
+* OS-level website blocking using hosts-file manipulation
 * Habit-gated internet unlock system
+* Automated block reset scheduling
+
+---
+
+## AI + Voice Logging
+
+* Voice-based workout logging using AssemblyAI
+* LangChain-powered AI oracle agent
+* OpenRouter LLM integration
+* Natural-language workout parsing pipeline
+
+---
+
+## Analytics + Automation
+
 * Workout analytics using Pandas
-* Background automation using APScheduler
-* Dockerized PostgreSQL deployment
+* Automated streak tracking
+* APScheduler background jobs
+* Dashboard visualization support
+
+---
+
+## Backend Infrastructure
+
 * FastAPI REST API architecture
 * SQLAlchemy ORM integration
-* Jinja-powered dashboard rendering
+* PostgreSQL database support
+* Dependency injection patterns
+* Dockerized deployment
 
 ---
 
@@ -47,8 +77,8 @@ A[Frontend Dashboard] --> B[FastAPI Backend]
 B --> C[(PostgreSQL)]
 B --> D[AssemblyAI API]
 B --> E[LangChain Agent]
-B --> F[Gatekeeper]
-B --> G[Scheduler]
+B --> F[Gatekeeper Engine]
+B --> G[APScheduler]
 B --> H[Pandas Analytics]
 
 F --> I["/etc/hosts"]
@@ -56,23 +86,41 @@ F --> I["/etc/hosts"]
 
 ---
 
-# Tech Stack
+# System Flow
 
-| Layer            | Technology  |
-| ---------------- | ----------- |
-| Backend          | FastAPI     |
-| ORM              | SQLAlchemy  |
-| Database         | PostgreSQL  |
-| AI Framework     | LangChain   |
-| Transcription    | AssemblyAI  |
-| Scheduling       | APScheduler |
-| Analytics        | Pandas      |
-| Templating       | Jinja2      |
-| Containerization | Docker      |
+```mermaid
+graph LR
+
+A[User Opens Distracting Website] --> B[Website Blocked]
+
+B --> C[Complete Habit]
+C --> D[Habit Stored in Database]
+D --> E[Unlock Endpoint Triggered]
+E --> F[Hosts File Updated]
+F --> G[Website Access Restored]
+```
 
 ---
 
-# Project Structure
+# Tech Stack
+
+| Layer                  | Technology    |
+| ---------------------- | ------------- |
+| Backend Framework      | FastAPI       |
+| ORM                    | SQLAlchemy    |
+| Database               | PostgreSQL    |
+| AI Framework           | LangChain     |
+| LLM Provider           | OpenRouter    |
+| Voice Transcription    | AssemblyAI    |
+| Scheduling             | APScheduler   |
+| Analytics              | Pandas        |
+| Templates              | Jinja2        |
+| Containerization       | Docker        |
+| Environment Management | python-dotenv |
+
+---
+
+# Repository Structure
 
 ```text
 daemon/
@@ -98,6 +146,60 @@ daemon/
 
 ---
 
+# Demo Flow
+
+## 1. Dashboard
+
+Visualize:
+
+* streaks
+* analytics
+* blocked sites
+* behavioral progress
+
+---
+
+## 2. Voice Workout Logging
+
+User says:
+
+```text
+"I did 50 pushups"
+```
+
+Pipeline:
+
+```text
+Audio Upload
+→ AssemblyAI Transcription
+→ Regex Parsing
+→ Database Insert
+→ Analytics Update
+```
+
+---
+
+## 3. Gatekeeper Enforcement
+
+Attempting to open a blocked website fails until the required habit is completed.
+
+This creates actual behavioral enforcement instead of passive tracking.
+
+---
+
+## 4. Habit Completion
+
+After completing the habit:
+
+```text
+Habit Completed
+→ Unlock Endpoint Triggered
+→ Hosts File Updated
+→ Website Access Restored
+```
+
+---
+
 # Installation
 
 ## Clone Repository
@@ -115,7 +217,9 @@ Create a `.env` file:
 
 ```env
 DATABASE_URL=postgresql://postgres:password@postgres:5432/app_db
+
 ASSEMBLY_API_KEY=your_key
+
 OPEN_ROUTER_API_KEY=your_key
 ```
 
@@ -131,11 +235,11 @@ docker-compose up --build
 
 ## Access Services
 
-```text
-FastAPI API: http://localhost:8000
-Swagger Docs: http://localhost:8000/docs
-PostgreSQL: localhost:5432
-```
+| Service      | URL                        |
+| ------------ | -------------------------- |
+| FastAPI API  | http://localhost:8000      |
+| Swagger Docs | http://localhost:8000/docs |
+| PostgreSQL   | localhost:5432             |
 
 ---
 
@@ -177,29 +281,66 @@ POST /voice_log
 audio=<audio_file>
 ```
 
-### Pipeline
+---
+
+## Unlock Internet Access
+
+```http
+POST /unlock
+```
+
+### Behavior
 
 ```text
-Audio Upload
-→ AssemblyAI Transcription
-→ Regex Parsing
-→ Database Insert
-→ Analytics Update
+Checks habit completion state
+→ Removes blocked entries
+→ Restores website access
+```
+
+---
+
+# Docker Commands
+
+## Build + Run Containers
+
+```bash
+docker-compose up --build
+```
+
+---
+
+## View Running Containers
+
+```bash
+docker ps
+```
+
+---
+
+## View Logs
+
+```bash
+docker logs <container_id>
 ```
 
 ---
 
 # Screenshots
 
-Add screenshots inside the `/screenshots` directory.
-
-Recommended captures:
+Create a `/screenshots` directory and include:
 
 * dashboard UI
-* Swagger API docs
+* Swagger documentation
 * Docker containers running
+* analytics visualizations
 * blocked website behavior
-* analytics output
+* voice logging flow
+
+Recommended additions:
+
+* GIF demo
+* terminal walkthrough
+* architecture image
 
 ---
 
@@ -207,32 +348,42 @@ Recommended captures:
 
 ## Regex-Based Parsing
 
-The workout extraction pipeline currently relies on regex parsing and may fail on ambiguous natural language.
+Workout extraction currently relies on regex parsing and can fail on ambiguous language.
 
-### Example Edge Cases
+Example edge cases:
 
 ```text
 "I did 50 pushups and 20 pullups"
+
 "completed fifty pushups"
 ```
+
+Future versions should use structured LLM extraction pipelines.
 
 ---
 
 ## Hosts File Safety
 
-Website blocking currently writes directly to `/etc/hosts`.
+Current website blocking directly modifies `/etc/hosts`.
 
-Future production hardening should include:
+Production hardening should include:
 
 * atomic writes
+* rollback backups
 * managed sections
-* automatic backups
+* corruption recovery
 
 ---
 
-## Import-Time Agent Execution
+## Import-Time Side Effects
 
-LangChain agent invocation should be isolated from module imports to avoid startup-side effects and deployment instability.
+LangChain agent execution should not occur during module import.
+
+Startup-time execution creates:
+
+* nondeterministic boot behavior
+* deployment instability
+* API dependency risks
 
 ---
 
@@ -245,30 +396,64 @@ LangChain agent invocation should be isolated from module imports to avoid start
 * Add ML-based behavioral predictions
 * Add cloud deployment pipeline
 * Add observability and metrics
+* Add usage telemetry
+* Add mobile companion app
+* Add browser extension integration
 
 ---
 
 # Lessons Learned
 
-* Lifecycle management in FastAPI
+This project involved system-level engineering across:
+
+* API architecture
+* ORM modeling
+* relational databases
+* scheduling systems
+* AI tooling
+* Docker deployment
+* analytics pipelines
+* OS-level system manipulation
+* background automation
+* infrastructure debugging
+
+Key technical takeaways:
+
+* lifecycle management in FastAPI
 * ORM relationship handling in SQLAlchemy
-* Dockerized backend orchestration
-* API polling workflows using AssemblyAI
-* Scheduler design for long-running services
-* Risks of side effects during application startup
-* System-level architecture design across multiple subsystems
+* API polling architecture from AssemblyAI
+* scheduler orchestration patterns
+* containerized backend deployment
+* risks of side effects during startup
+* designing coherent multi-system architectures
+
+---
+
+# What This Project Demonstrates
+
+DAEMON demonstrates:
+
+* backend systems engineering
+* infrastructure-aware architecture
+* AI-assisted automation
+* system-level behavioral enforcement
+* multi-service orchestration
+* production-oriented API design
+* independent problem selection
+* end-to-end execution capability
 
 ---
 
 # Repository Goals
 
-DAEMON is designed to demonstrate:
+This repository is intended to showcase:
 
-* backend systems engineering
-* infrastructure-aware application design
-* AI-assisted automation
-* behavioral systems architecture
-* production-oriented API structure
+* systems thinking
+* architectural reasoning
+* backend engineering depth
+* behavioral systems design
+* deployment capability
+* technical communication
 
 ---
 
