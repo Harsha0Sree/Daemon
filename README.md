@@ -6,7 +6,7 @@ DAEMON combines AI agents, voice transcription, analytics, scheduling, and OS-le
 
 ---
 
-## Problem Statement
+# Problem Statement
 
 Most productivity systems rely on reminders and self-discipline.
 
@@ -22,7 +22,7 @@ The project is designed as a backend-heavy behavioral infrastructure system rath
 
 ---
 
-## Features
+# Features
 
 * Voice-based workout logging using AssemblyAI transcription
 * AI oracle agent using LangChain tools + OpenRouter LLMs
@@ -37,7 +37,7 @@ The project is designed as a backend-heavy behavioral infrastructure system rath
 
 ---
 
-## Architecture
+# Architecture
 
 ```mermaid
 graph TD
@@ -51,12 +51,12 @@ B --> F[Gatekeeper]
 B --> G[Scheduler]
 B --> H[Pandas Analytics]
 
-F --> I[/etc/hosts]
+F --> I["/etc/hosts"]
 ```
 
 ---
 
-## Tech Stack
+# Tech Stack
 
 | Layer            | Technology  |
 | ---------------- | ----------- |
@@ -72,7 +72,7 @@ F --> I[/etc/hosts]
 
 ---
 
-## Project Structure
+# Project Structure
 
 ```text
 daemon/
@@ -98,16 +98,18 @@ daemon/
 
 ---
 
-## Installation
+# Installation
 
-### Clone Repository
+## Clone Repository
 
 ```bash
 git clone <repo_url>
 cd daemon
 ```
 
-### Create Environment Variables
+---
+
+## Create Environment Variables
 
 Create a `.env` file:
 
@@ -117,13 +119,17 @@ ASSEMBLY_API_KEY=your_key
 OPEN_ROUTER_API_KEY=your_key
 ```
 
-### Run With Docker
+---
+
+## Run With Docker
 
 ```bash
 docker-compose up --build
 ```
 
-### Access Services
+---
+
+## Access Services
 
 ```text
 FastAPI API: http://localhost:8000
@@ -133,15 +139,15 @@ PostgreSQL: localhost:5432
 
 ---
 
-## API Examples
+# API Examples
 
-### Create Habit
+## Create Habit
 
 ```http
 POST /habits
 ```
 
-Request:
+### Request
 
 ```json
 {
@@ -149,7 +155,7 @@ Request:
 }
 ```
 
-Response:
+### Response
 
 ```json
 {
@@ -159,19 +165,19 @@ Response:
 
 ---
 
-### Voice Workout Logging
+## Voice Workout Logging
 
 ```http
 POST /voice_log
 ```
 
-Form Data:
+### Form Data
 
 ```text
 audio=<audio_file>
 ```
 
-Pipeline:
+### Pipeline
 
 ```text
 Audio Upload
@@ -183,7 +189,7 @@ Audio Upload
 
 ---
 
-## Screenshots
+# Screenshots
 
 Add screenshots inside the `/screenshots` directory.
 
@@ -197,20 +203,22 @@ Recommended captures:
 
 ---
 
-## Current Limitations
+# Current Limitations
 
-### Regex-Based Parsing
+## Regex-Based Parsing
 
 The workout extraction pipeline currently relies on regex parsing and may fail on ambiguous natural language.
 
-Example edge cases:
+### Example Edge Cases
 
 ```text
 "I did 50 pushups and 20 pullups"
 "completed fifty pushups"
 ```
 
-### Hosts File Safety
+---
+
+## Hosts File Safety
 
 Website blocking currently writes directly to `/etc/hosts`.
 
@@ -220,13 +228,15 @@ Future production hardening should include:
 * managed sections
 * automatic backups
 
-### Import-Time Agent Execution
+---
+
+## Import-Time Agent Execution
 
 LangChain agent invocation should be isolated from module imports to avoid startup-side effects and deployment instability.
 
 ---
 
-## Future Improvements
+# Future Improvements
 
 * Replace regex parsing with structured LLM extraction
 * Add Redis task queue
@@ -238,7 +248,7 @@ LangChain agent invocation should be isolated from module imports to avoid start
 
 ---
 
-## Lessons Learned
+# Lessons Learned
 
 * Lifecycle management in FastAPI
 * ORM relationship handling in SQLAlchemy
@@ -250,7 +260,7 @@ LangChain agent invocation should be isolated from module imports to avoid start
 
 ---
 
-## Repository Goals
+# Repository Goals
 
 DAEMON is designed to demonstrate:
 
@@ -262,6 +272,6 @@ DAEMON is designed to demonstrate:
 
 ---
 
-## License
+# License
 
 MIT License
