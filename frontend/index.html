@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daemon</title>
+    <style>
+        /* CSS Architecture: Modern Minimalist Design System */
+        :root {
+            /* Palette */
+            --bg-body: #f4f4f5;
+            --bg-surface: #ffffff;
+            --text-main: #18181b;
+            --text-muted: #71717a;
+            --border-light: #e4e4e7;
+            
+            /* Accents */
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --danger: #ef4444;
+            --danger-hover: #dc2828;
+            --success: #10b981;
+            
+            /* Shadows & Transitions */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding: 2rem 1rem;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Container Layout */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Header & Settings */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 0.5rem;
+        }
+
+        h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.025em; color: var(--text-main); }
+        
+        .api-config {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .api-config input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px dashed var(--border-light);
+            color: var(--text-muted);
+            font-family: monospace;
+            padding: 0.2rem;
+            width: 200px;
+            transition: var(--transition);
+        }
+        
+        .api-config input:focus { outline: none; border-bottom-color: var(--primary); color: var(--text-main); }
+
+        /* Surface Cards */
+        .card {
+            background: var(--bg-surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 0.75rem;
+        }
+
+        .card-title { font-weight: 600; font-size: 1.1rem; }
+
+        /* Voice Logger Component */
+        .voice-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .mic-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            margin-bottom: 1rem;
+        }
+
+        .mic-button:hover { background: var(--primary-hover); transform: scale(1.05); }
+        
+        .mic-button.recording {
+            background: var(--danger);
+            animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .voice-status { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+
+        /* Two-Column Grid */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Interactive Elements */
+        .input-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        input[type="text"]:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+
+        button.btn {
+            padding: 0.6rem 1.2rem;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-main);
+        }
+
+        button.btn:hover { background: var(--bg-body); }
+        button.btn-primary { background: var(--primary); color: white; border-color: var(--primary); }
+        button.btn-primary:hover { background: var(--primary-hover); color: white; }
+        button.btn-danger { color: var(--danger); border-color: #fca5a5; }
+        button.btn-danger:hover { background: #fef2f2; }
+
+        /* Lists */
+        .list-container {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: var(--bg-body);
+            border-radius: 6px;
+            border: 1px solid transparent;
+            transition: var(--transition);
+        }
+
+        .list-item:hover { border-color: var(--border-light); }
+        
+        .item-name { font-weight: 500; }
+        
+        .action-group { display: flex; gap: 0.25rem; }
+        
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.4rem;
+            border-radius: 4px;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .icon-btn:hover { background: #e4e4e7; color: var(--text-main); }
+        .icon-btn.check:hover { background: #d1fae5; color: var(--success); }
+        .icon-btn.trash:hover { background: #fee2e2; color: var(--danger); }
+
+        /* Toast Notifications System */
+        #toast-container {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 1000;
+        }
+
+        .toast {
+            background: var(--bg-surface);
+            color: var(--text-main);
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-left: 4px solid var(--primary);
+            animation: slide-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 350px;
+        }
+
+        .toast.error { border-left-color: var(--danger); }
+        .toast.success { border-left-color: var(--success); }
+        .toast.fade-out { opacity: 0; transform: translateX(100%); transition: all 0.3s ease; }
+
+        @keyframes slide-in {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* SVG Icons */
+        svg { width: 1.2rem; height: 1.2rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Daemon</h1>
+            <div class="api-config">
+                <svg viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.9 1.3 1.5 1.5 2.5m7 0v4c0 1.1-.9 2-2 2h-4c-1.1 0-2-.9-2-2v-4m0 4h8"/></svg>
+                <input type="text" id="backendUrl" value="http://localhost:8000" title="API Endpoint">
+            </div>
+        </header>
+
+        <section class="card">
+            <div class="voice-section">
+                <button id="micBtn" class="mic-button" onclick="toggleVoiceCapture()">
+                    <svg style="width: 2rem; height: 2rem;" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+                </button>
+                <div id="voiceStatus" class="voice-status">Tap to log a workout</div>
+            </div>
+        </section>
+
+        <div class="grid-layout">
+            
+            <section class="card">
+                <div class="card-header">
+                    <span class="card-title">Habits</span>
+                    <span id="habitCount" style="color: var(--text-muted); font-size: 0.85rem;">0 active</span>
+                </div>
+                
+                <div class="input-row">
+                    <input type="text" id="habitInput" placeholder="e.g., Read 10 pages..." onkeypress="handleEnter(event, addHabit)">
+                    <button class="btn btn-primary" onclick="addHabit()">Add</button>
+                </div>
+
+                <ul id="habitList" class="list-container">
+                    </ul>
+            </section>
+
+            <section class="card">
+                <div class="card-header">
+                    <span class="card-title">Blocked Sites</span>
+                    <button class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="requestUnlock()">Unlock Web</button>
+                </div>
+                
+                <div class="input-row">
+                    <input type="text" id="siteInput" placeholder="e.g., twitter.com" onkeypress="handleEnter(event, blockSite)">
+                    <button class="btn btn-primary" onclick="blockSite()">Block</button>
+                </div>
+
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                    <button class="btn" style="flex: 1;" onclick="syncHostsFile()">Sync System</button>
+                </div>
+
+                <ul id="siteList" class="list-container">
+                    </ul>
+            </section>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script>
+        // --- Core State & Infrastructure ---
+        const api = () => document.getElementById('backendUrl').value.replace(/\/$/, '');
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let activeSites = new Set();
+
+        // --- View Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchHabits();
+        });
+
+        // --- Notification Subsystem (Replaces Terminal Log) ---
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let icon = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+            if (type === 'success') icon = '<svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
+            if (type === 'error') icon = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+
+            toast.innerHTML = `${icon} <span>${message}</span>`;
+            container.appendChild(toast);
+
+            // Trigger CSS garbage collection animation after 3.5 seconds
+            setTimeout(() => {
+                toast.classList.add('fade-out');
+                toast.addEventListener('transitionend', () => toast.remove());
+            }, 3500);
+        }
+
+        // --- Utility ---
+        const handleEnter = (e, callback) => { if (e.key === 'Enter') callback(); }
+
+        // --- API Execution Abstractions ---
+        async function fetchAPI(endpoint, method = 'GET', body = null) {
+            const options = { method, headers: {} };
+            if (body) {
+                options.headers['Content-Type'] = 'application/json';
+                options.body = JSON.stringify(body);
+            }
+            try {
+                const res = await fetch(`${api()}${endpoint}`, options);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return await res.json();
+            } catch (err) {
+                showToast(`Network Error: ${err.message}`, 'error');
+                throw err;
+            }
+        }
+
+        // --- Habits Module ---
+        async function fetchHabits() {
+            try {
+                const data = await fetchAPI('/habits');
+                const list = document.getElementById('habitList');
+                list.innerHTML = '';
+                
+                const habits = data.data || [];
+                document.getElementById('habitCount').innerText = `${habits.length} active`;
+
+                habits.forEach(habit => {
+                    const li = document.createElement('li');
+                    li.className = 'list-item';
+                    li.innerHTML = `
+                        <span class="item-name">${habit.habit_name}</span>
+                        <div class="action-group">
+                            <button class="icon-btn check" onclick="logHabit('${habit.habit_name}')" title="Complete Habit">
+                                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            </button>
+                            <button class="icon-btn trash" onclick="deleteHabit('${habit.habit_name}')" title="Delete Habit">
+                                <svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            </button>
+                        </div>
+                    `;
+                    list.appendChild(li);
+                });
+            } catch (e) {}
+        }
+
+        async function addHabit() {
+            const input = document.getElementById('habitInput');
+            const name = input.value.trim();
+            if (!name) return;
+            try {
+                await fetchAPI('/habits', 'POST', { name });
+                input.value = '';
+                showToast(`Habit "${name}" created`, 'success');
+                fetchHabits();
+            } catch (e) {}
+        }
+
+        async function logHabit(name) {
+            try {
+                const res = await fetchAPI(`/logs/${encodeURIComponent(name)}`, 'POST');
+                showToast(res.message || `Logged ${name}`, 'success');
+            } catch (e) {}
+        }
+
+        async function deleteHabit(name) {
+            try {
+                await fetchAPI(`/habits/${encodeURIComponent(name)}`, 'DELETE');
+                showToast(`Removed ${name}`, 'info');
+                fetchHabits();
+            } catch (e) {}
+        }
+
+        // --- Blocklist & OS Controls Module ---
+        function renderSites() {
+            const list = document.getElementById('siteList');
+            list.innerHTML = '';
+            activeSites.forEach(site => {
+                const li = document.createElement('li');
+                li.className = 'list-item';
+                li.innerHTML = `
+                    <span class="item-name" style="color: var(--danger); font-family: monospace;">${site}</span>
+                    <button class="icon-btn trash" onclick="unblockSite('${site}')" title="Unblock">
+                        <svg viewBox="0 0 24 24"><path d="M3 3l18 18M10.585 10.585a2 2 0 0 0 2.829 2.829M17 17H7a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h2.5"/></svg>
+                    </button>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        async function blockSite() {
+            const input = document.getElementById('siteInput');
+            const site = input.value.trim().toLowerCase();
+            if (!site) return;
+            try {
+                await fetchAPI('/websites_to_block', 'POST', { websites: [site] });
+                activeSites.add(site);
+                input.value = '';
+                renderSites();
+                showToast(`Blocked ${site}`, 'success');
+            } catch (e) {}
+        }
+
+        async function unblockSite(site) {
+            try {
+                await fetchAPI('/unblock_websites', 'POST', { websites: [site] });
+                activeSites.delete(site);
+                renderSites();
+                showToast(`Unblocked ${site}`, 'info');
+            } catch (e) {}
+        }
+
+        async function syncHostsFile() {
+            try {
+                await fetchAPI('/sync_blocked_websites', 'POST');
+                showToast('Hosts file synchronized', 'success');
+            } catch (e) {}
+        }
+
+        async function requestUnlock() {
+            try {
+                const res = await fetchAPI('/unlock', 'POST');
+                if (res.message === "unlocked") {
+                    showToast('System wide unlock granted', 'success');
+                    activeSites.clear();
+                    renderSites();
+                } else {
+                    showToast(`Unlock denied: ${res.message}`, 'error');
+                }
+            } catch (e) {}
+        }
+
+        // --- Audio & Blob Processing Pipeline ---
+        async function toggleVoiceCapture() {
+            const btn = document.getElementById('micBtn');
+            const status = document.getElementById('voiceStatus');
+
+            // If already recording, execute stop sequence
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(t => t.stop());
+                btn.classList.remove('recording');
+                status.innerText = "Processing audio pipeline...";
+                return;
+            }
+
+            // Initialization Sequence
+            audioChunks = [];
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                
+                mediaRecorder.ondataavailable = e => {
+                    if (e.data.size > 0) audioChunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = async () => {
+                    const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const formData = new FormData();
+                    formData.append('audio', blob, 'workout.webm');
+
+                    try {
+                        const res = await fetch(`${api()}/voice_log`, { method: 'POST', body: formData });
+                        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                        const data = await res.json();
+                        showToast(`Voice Engine: ${data.message}`, 'success');
+                        status.innerText = "Tap to log a workout";
+                    } catch (err) {
+                        showToast(`Transcription Failed: ${err.message}`, 'error');
+                        status.innerText = "Processing failed. Tap to retry.";
+                    }
+                };
+
+                mediaRecorder.start();
+                btn.classList.add('recording');
+                status.innerText = "Listening... Tap again to send.";
+
+            } catch (err) {
+                showToast(`Microphone access denied: ${err.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>
